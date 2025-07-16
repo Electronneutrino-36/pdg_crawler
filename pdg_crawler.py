@@ -23,6 +23,7 @@ except ModuleNotFoundError:
 
 # main function to get meson data
 def update_mesons(api):
+    print("Retrieving meson data.")
     part_dict = {}                                                  # define temporary dictionary to store the data
     with alive_bar(len(list(api.get_particles()))) as bar:          # initialize the loading bar
         for item in api.get_particles():                            # loop over the particles
@@ -86,11 +87,12 @@ def update_mesons(api):
                 
             time.sleep(0.01)                                                        # update timer for the loading bar
             bar()                                                                   # display loading bar
-    print("Retrieved meson data.")
+    
     return part_dict
 
 # main function to get baryon data
 def update_baryons(api):
+    print("Retrieving baryon data.")
     part_dict = {}
     with alive_bar(len(list(api.get_particles()))) as bar:
         for item in api.get_particles():
@@ -145,7 +147,6 @@ def update_baryons(api):
                 
             time.sleep(0.01)
             bar()
-    print("Retrieved baryon data.")
     return part_dict
 
 # get meson and baryon data at the same time
@@ -155,15 +156,11 @@ def update_particles(api):
     return mesons_updated, baryons_updated
 
 # write data as .txt or .dat file
-def write_to_file(data,filename):
-    savefile = open(filename,"w")
-    savefile.write(f"{'Name':<24} | {'I^(G)(J^P(C))':^18} | {'M  [MeV]':>10} | {'dM+ [MeV]':>10} | {'dM- [MeV]':>10} | {'W [MeV]':>10} | {'dW+ [MeV]':>10} | {'dW- [MeV]':>10} | {'C':^10}\n")
+def write_to_file(data,internal_filename):
+    savefile = open(internal_filename,"w")
+    savefile.write(f"{'Name':<24} | {'I^(G)(J^P(C))':^18} | {'M  [MeV]':>10} | {'dM+ [MeV]':>10} | {'dM- [MeV]':>10} | {'W [MeV]':>10} | {'dW+ [MeV]':>10} | {'dW- [MeV]':>10} | {'C':<10}\n")
 
     for msns in data.keys():
-        print("{}   {}  {}  {}  {}  {}  {}  {}  {}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
-                                                                        data[msns]['Mass Error positive'],data[msns]['Mass Error negative'],
-                                                                        data[msns]['Width'],data[msns]['Width Error positive'],data[msns]['Width Error negative'],
-                                                                        data[msns]['Charge']))
         if ( data[msns]['Width'] != None and data[msns]['Mass Error positive'] != None ):
             savefile.write("{:<24}   {:^18}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
                                                                         data[msns]['Mass Error positive'],data[msns]['Mass Error negative'],
@@ -188,30 +185,51 @@ def write_to_file(data,filename):
 
 # start of program 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-meson", "--meson_properties", action='store_true', help="Toggle on to update the meson properties.")
+parser.add_argument("-baryon", "--baryon_properties", action='store_true', help="Toggle on to update the baryon properties.")
+parser.add_argument("-mfilename", "--meson_filename", type=str, default='mesons', help="Filename to store the meson data.")
+parser.add_argument("-bfilename", "--baryon_filename", type=str, default='baryons', help="Filename to store the baryon data.")
+parser.add_argument("-filetype", "--type_for_file", type=str, default='.json', help="Choose type of file for the stored data. Default is .json")
+args = parser.parse_args()
+
+
 
 pdg_api = pdg.connect(pedantic=False)
 print("Initialized PDG API")
 
-delta = pdg_api.get_particle_by_name('Delta(1232)++')
-
-print(f"Properties for {delta.name}:")
-for prop in delta.properties():
-    for propl in prop.summary_values():
-        print(propl.pprint())
-exit()
-
+mesons = {}
+baryons = {}
 # write meson and baryon data to dictionaries
-mesons, baryons = update_particles(pdg_api)
+if ( args.meson_properties == True and args.baryon_properties == False ):
+    mesons = update_mesons(pdg_api)
+elif ( args.meson_properties == False and args.baryon_properties == True ):
+    baryons = update_baryons(pdg_api)
+else:
+    mesons, baryons = update_particles(pdg_api)
 
+name_of_meson_file = args.meson_filename+args.type_for_file
+name_of_baryon_file = args.baryon_filename+args.type_for_file
+
+if len(mesons) != 0:
+    print("Writing meson data to file: " + name_of_meson_file)
+if len(baryons) != 0:
+    print("Writing baryon data to file: " + name_of_baryon_file)
 
 # write data as .json file
-with open('mesons.json', 'w') as f:
-    json.dump(mesons,f,ensure_ascii=False)
-
-with open('baryons.json', 'w') as f:
-    json.dump(baryons,f,ensure_ascii=False)
+if args.type_for_file == '.json':
+    if len(mesons) != 0:
+        with open(name_of_meson_file, 'w') as f:
+            json.dump(mesons,f,ensure_ascii=False)
+    if len(baryons) != 0:
+        with open(name_of_baryon_file, 'w') as f:
+            json.dump(baryons,f,ensure_ascii=False)
 
 # write data to .dat file
-write_to_file(mesons,"mesons.dat")
-write_to_file(baryons,"baryson.dat")
+else:
+    if len(mesons) != 0:
+        write_to_file(mesons,name_of_meson_file)
+    if len(baryons) != 0:
+        print("hello")
+        write_to_file(baryons,name_of_baryon_file)
 
