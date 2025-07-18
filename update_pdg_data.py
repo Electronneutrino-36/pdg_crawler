@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 
 from pdg_crawler import *                                           # load the pdg crawler functions
 
@@ -10,12 +11,16 @@ parser.add_argument("-bfilename", "--baryon_filename", type=str, default='baryon
 parser.add_argument("-filetype", "--type_for_file", type=str, default='.json', help="Choose type of file for the stored data. Default is .json")
 args = parser.parse_args()
 
-
-
 pdg_api = pdg.connect(pedantic=False)
 print("Initialized PDG API")
 
+# Uncomment to show all the particles
 
+# for item in pdg_api.get_particles():
+#     print(item.pdgid,"  ", item.description)
+
+
+# define the meson and baryon dictionaries
 mesons = {}
 baryons = {}
 # write meson and baryon data to dictionaries
@@ -48,6 +53,5 @@ else:
     if len(mesons) != 0:
         write_to_file(mesons,name_of_meson_file)
     if len(baryons) != 0:
-        print("hello")
         write_to_file(baryons,name_of_baryon_file)
 
