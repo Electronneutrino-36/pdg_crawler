@@ -356,27 +356,27 @@ def write_to_file(data,internal_filename):
         #                                                                 data[msns]['Width'],data[msns]['Width Error positive'],data[msns]['Width Error negative'],
         #                                                                 data[msns]['Charge']))
         if ( data[msns]['Width'] != None and data[msns]['Mass Error positive'] != None ):
-            savefile.write("{:<24}   {:^18}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
+            savefile.write("{:<24}   {:^18}  {:>10.5f}  {:>10.5f}  {:>10.5f}  {:>10.5f}  {:>10.5f}  {:>10.5f}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
                                                                         data[msns]['Mass Error positive'],data[msns]['Mass Error negative'],
                                                                         data[msns]['Width'],data[msns]['Width Error positive'],data[msns]['Width Error negative'],
                                                                         data[msns]['Charge']))
         elif ( data[msns]['Width'] == None  and data[msns]['Mass Error positive'] != None ):
-            savefile.write("{:<24}   {:^18}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10}  {:>10}  {:>10}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
+            savefile.write("{:<24}   {:^18}  {:>10.5f}  {:>10.5f}  {:>10.5f}  {:>10}  {:>10}  {:>10}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
                                                                         data[msns]['Mass Error positive'],data[msns]['Mass Error negative'],
                                                                         "-", "-", "-",
                                                                         data[msns]['Charge']))
         elif ( data[msns]['Width'] != None  and data[msns]['Mass'] != None and data[msns]['Mass Error positive'] == None ):
-            savefile.write("{:<24}   {:^18}  {:>10.3f}  {:>10}  {:>10}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
+            savefile.write("{:<24}   {:^18}  {:>10.5f}  {:>10}  {:>10}  {:>10.5f}  {:>10.5f}  {:>10.5f}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
                                                                         "-","-",
                                                                         data[msns]['Width'],data[msns]['Width Error positive'],data[msns]['Width Error negative'],
                                                                         data[msns]['Charge']))
         elif ( data[msns]['Width'] != None  and data[msns]['Mass'] == None and data[msns]['Mass Error positive'] == None ):
-            savefile.write("{:<24}   {:^18}  {:>10}  {:>10}  {:>10}  {:>10.3f}  {:>10.3f}  {:>10.3f}  {:>10}\n".format(msns,data[msns]['QN'],"-",
+            savefile.write("{:<24}   {:^18}  {:>10}  {:>10}  {:>10}  {:>10.5f}  {:>10.5f}  {:>10.5f}  {:>10}\n".format(msns,data[msns]['QN'],"-",
                                                                         "-","-",
                                                                         data[msns]['Width'],data[msns]['Width Error positive'],data[msns]['Width Error negative'],
                                                                         data[msns]['Charge']))
         else:
-            savefile.write("{:<24}   {:^18}  {:>10.3f}  {:>10}  {:>10}  {:>10}  {:>10}  {:>10}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
+            savefile.write("{:<24}   {:^18}  {:>10.5f}  {:>10}  {:>10}  {:>10}  {:>10}  {:>10}  {:>10}\n".format(msns,data[msns]['QN'],data[msns]['Mass'],
                                                                         "-", "-",
                                                                         "-", "-", "-",
                                                                         data[msns]['Charge']))
