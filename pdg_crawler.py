@@ -8,7 +8,7 @@ try:
     print("Module pdg found!")
 except ModuleNotFoundError:
     print("Module pdg not found!")
-    print("Please install it using: python -m pip install pdg")
+    print("Please install it using: python3 -m pip install pdg")
     exit()
 
 # for nice visualization of the loading bar
